@@ -11,8 +11,9 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
         // set custom Hero properties
         this.direction = direction 
         this.heroVelocity = 100    // in pixels
-        this.dashCooldown = 300    // in ms
-        this.hurtTimer = 250       // in ms
+        this.heroSprintMult = 1.7
+        this.heroAnimSprintMult = 1.3
+
 
         // initialize state machine managing hero (initial state, possible states, state args[])
         scene.heroFSM = new StateMachine('idle', {
@@ -77,9 +78,18 @@ class MoveState extends State {
             moveDirection.x = 1
             hero.direction = 'right'
         }
-        // normalize movement vector, update hero position, and play proper animation
+        // normalize movement vector
         moveDirection.normalize()
-        hero.setVelocity(hero.heroVelocity * moveDirection.x, hero.heroVelocity * moveDirection.y)
-        hero.anims.play(`walk-${hero.direction}`, true)
+
+        // allow player to run using the 'shift' key
+        if (shift.isDown) {
+            hero.setVelocity(hero.heroVelocity * hero.heroSprintMult * moveDirection.x, hero.heroVelocity * moveDirection.y)
+            hero.anims.play(`walk-${hero.direction}`, true)
+            hero.anims.timeScale = hero.heroAnimSprintMult
+        } else {
+            hero.setVelocity(hero.heroVelocity * moveDirection.x, hero.heroVelocity * moveDirection.y)
+            hero.anims.play(`walk-${hero.direction}`, true)
+            hero.anims.timeScale = 1
+        }
     }
 }
