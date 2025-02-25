@@ -10,7 +10,7 @@ class Load extends Phaser.Scene {
             frameWidth: 32,
             frameHeight: 32,
         })
-        this.load.image('map', 'map-scroll.jpg')
+        this.load.image('outdoor_bg', 'backgrounds/outdoor_bg.png')
     }
 
     create() {

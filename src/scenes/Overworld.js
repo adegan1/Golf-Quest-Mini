@@ -5,7 +5,7 @@ class Overworld extends Phaser.Scene {
 
     create() {
         // add background image
-        this.map = this.add.image(0, 0, 'map').setOrigin(0,0)
+        this.map = this.add.image(0, 0, 'outdoor_bg').setOrigin(0,0)
 
         // add new Hero to scene (scene, x, y, key, frame, direction)
         this.hero = new Hero(this, 200, 150, 'hero', 0, 'down')

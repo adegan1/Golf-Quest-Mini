@@ -83,7 +83,7 @@ class MoveState extends State {
 
         // allow player to run using the 'shift' key
         if (shift.isDown) {
-            hero.setVelocity(hero.heroVelocity * hero.heroSprintMult * moveDirection.x, hero.heroVelocity * moveDirection.y)
+            hero.setVelocity(hero.heroVelocity * hero.heroSprintMult * moveDirection.x, hero.heroVelocity * hero.heroSprintMult * moveDirection.y)
             hero.anims.play(`walk-${hero.direction}`, true)
             hero.anims.timeScale = hero.heroAnimSprintMult
         } else {
