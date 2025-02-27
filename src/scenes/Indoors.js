@@ -1,24 +1,22 @@
-class Overworld extends Phaser.Scene {
+class Indoors extends Phaser.Scene {
     constructor() {
-        super("overworldScene")
+        super("indoorsScene")
     }
 
     init() {
         // spawn locations
-        this.aceSpawnX = 1080
-        this.aceSpawnY = 400
+        this.aceSpawnX = 400
+        this.aceSpawnY = 300
     }
 
     create() {
         // add background image
-        this.map = this.add.image(0, 0, 'outdoor_bg').setOrigin(0,0)
+        this.map = this.add.image(0, 0, 'indoor_bg').setOrigin(0,0)
 
         // add new Hero to scene (scene, x, y, key, frame, direction)
         this.hero = new Hero(this, this.aceSpawnX, this.aceSpawnY, 'ace', 0, 'down')
 
         // set up camera
-        this.cameras.main.setBounds(0, 0, this.map.width, this.map.height)
-        this.cameras.main.startFollow(this.hero, false, 0.5, 0.5)
         this.physics.world.setBounds(0, 0, this.map.width, this.map.height)
 
         // setup keyboard input

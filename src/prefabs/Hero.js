@@ -5,13 +5,14 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this)           // add Hero to existing scene
         scene.physics.add.existing(this)   // add physics body to scene
 
-        this.body.setSize(this.width / 2, this.height / 2)
+        this.body.setSize(this.width / 2, this.height / 3)
+        this.body.setOffset(this.width / 4, this.height / 1.65)
         this.body.setCollideWorldBounds(true)
 
         // set custom Hero properties
         this.direction = direction 
-        this.heroVelocity = 100    // in pixels
-        this.heroSprintMult = 1.7
+        this.heroVelocity = 200    // in pixels
+        this.heroSprintMult = 1.6
         this.heroAnimSprintMult = 1.3
 
 
@@ -27,8 +28,8 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
 class IdleState extends State {
     enter(scene, hero) {
         hero.setVelocity(0)
-        hero.anims.play(`walk-${hero.direction}`)
-        hero.anims.stop()
+        //hero.anims.play(`walk-${hero.direction}`)
+        //hero.anims.stop()
     }
 
     execute(scene, hero) {
@@ -84,12 +85,13 @@ class MoveState extends State {
         // allow player to run using the 'shift' key
         if (shift.isDown) {
             hero.setVelocity(hero.heroVelocity * hero.heroSprintMult * moveDirection.x, hero.heroVelocity * hero.heroSprintMult * moveDirection.y)
-            hero.anims.play(`walk-${hero.direction}`, true)
             hero.anims.timeScale = hero.heroAnimSprintMult
         } else {
             hero.setVelocity(hero.heroVelocity * moveDirection.x, hero.heroVelocity * moveDirection.y)
-            hero.anims.play(`walk-${hero.direction}`, true)
             hero.anims.timeScale = 1
         }
+
+        // animate hero
+        //hero.anims.play(`walk-${hero.direction}`, true)
     }
 }

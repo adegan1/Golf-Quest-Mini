@@ -4,18 +4,25 @@ class Load extends Phaser.Scene {
     }
 
     preload() {
-        // load the visual goodz
         this.load.path = './assets/'
-        this.load.spritesheet('hero', 'hero-sheet.png', {
+        /*this.load.spritesheet('hero', 'hero-sheet.png', {
             frameWidth: 32,
             frameHeight: 32,
-        })
+        })*/
+
+        // load character visuals
+        this.load.image('ace', 'sprites/characters/ace_front.png')
+        this.load.image('wedge', 'sprites/characters/wedge_front.png')
+        this.load.image('lina', 'sprites/characters/lina_front.png')
+
+        // load backgrounds
+        this.load.image('indoor_bg', 'backgrounds/indoors_bg.png')
         this.load.image('outdoor_bg', 'backgrounds/outdoor_bg.png')
     }
 
     create() {
         // hero animations (walking)
-        this.anims.create({
+        /*this.anims.create({
             key: 'walk-down',
             frameRate: 8,
             repeat: -1,
@@ -38,45 +45,9 @@ class Load extends Phaser.Scene {
             frameRate: 8,
             repeat: -1,
             frames: this.anims.generateFrameNumbers('hero', { start: 12, end: 15 }),
-        })
-
-        // hero animations (swinging)
-        this.anims.create({
-            key: 'swing-down',
-            frameRate: 8,
-            repeat: 0,
-            frames: this.anims.generateFrameNumbers('hero', { start: 16, end: 19 }),
-        })
-        this.anims.create({
-            key: 'swing-up',
-            frameRate: 8,
-            repeat: 0,
-            frames: this.anims.generateFrameNumbers('hero', { start: 20, end: 23 }),
-        })
-        this.anims.create({
-            key: 'swing-right',
-            frameRate: 8,
-            repeat: 0,
-            frames: this.anims.generateFrameNumbers('hero', { start: 24, end: 27 }),
-        })
-        this.anims.create({
-            key: 'swing-left',
-            frameRate: 8,
-            repeat: 0,
-            frames: this.anims.generateFrameNumbers('hero', { start: 28, end: 31 }),
-        })
-
-        // circular attack
-        this.anims.create({
-            key: 'circular-attack',
-            frameRate: 24,
-            repeat: 0,
-            frames: this.anims.generateFrameNumbers('hero', {
-                frames: [16, 16, 16, 17, 18, 24, 25, 26, 21, 22, 30, 29, 28, 18, 19, 19, 19]
-            })
-        })
+        })*/
 
         // proceed once loading completes
-        this.scene.start('overworldScene')
+        this.scene.start('indoorsScene')
     }
 }
