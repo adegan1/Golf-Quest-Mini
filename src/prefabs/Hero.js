@@ -5,8 +5,8 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this)           // add Hero to existing scene
         scene.physics.add.existing(this)   // add physics body to scene
 
-        this.body.setSize(this.width / 2, this.height / 3)
-        this.body.setOffset(this.width / 4, this.height / 1.65)
+        this.body.setSize(this.width / 1.5, this.height / 3)
+        this.body.setOffset(this.width / 6, this.height / 1.65)
         this.body.setCollideWorldBounds(true)
 
         // set custom Hero properties

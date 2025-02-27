@@ -17,7 +17,11 @@ class Load extends Phaser.Scene {
 
         // load backgrounds
         this.load.image('indoor_bg', 'backgrounds/indoors_bg.png')
+        this.load.image('indoor_layers', 'backgrounds/indoors_layers.png')
         this.load.image('outdoor_bg', 'backgrounds/outdoor_bg.png')
+
+        // load other sprites
+        this.load.image('interact', 'sprites/interact.png')
     }
 
     create() {
@@ -48,6 +52,6 @@ class Load extends Phaser.Scene {
         })*/
 
         // proceed once loading completes
-        this.scene.start('indoorsScene')
+        this.scene.start('overworldScene')
     }
 }
