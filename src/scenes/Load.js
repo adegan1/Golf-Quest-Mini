@@ -5,13 +5,12 @@ class Load extends Phaser.Scene {
 
     preload() {
         this.load.path = './assets/'
-        /*this.load.spritesheet('hero', 'hero-sheet.png', {
-            frameWidth: 32,
-            frameHeight: 32,
-        })*/
 
         // load character visuals
-        this.load.image('ace', 'sprites/characters/ace_front.png')
+        this.load.spritesheet('ace', 'sprites/characters/ace_spritesheet.png', {
+            frameWidth: 54,
+            frameHeight: 66,
+        })
         this.load.image('wedge', 'sprites/characters/wedge_front.png')
         this.load.image('lina', 'sprites/characters/lina_front.png')
 
@@ -26,26 +25,26 @@ class Load extends Phaser.Scene {
 
     create() {
         // hero animations (walking)
-        /*this.anims.create({
+        this.anims.create({
             key: 'walk-down',
             frameRate: 8,
             repeat: -1,
-            frames: this.anims.generateFrameNumbers('hero', { start: 0, end: 3 }),
+            frames: this.anims.generateFrameNumbers('hero', { start: 0, end: 0 }),
+        })
+        this.anims.create({
+            key: 'walk-left',
+            frameRate: 8,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('hero', { start: 1, end: 1 }),
         })
         this.anims.create({
             key: 'walk-right',
             frameRate: 8,
             repeat: -1,
-            frames: this.anims.generateFrameNumbers('hero', { start: 4, end: 7 }),
+            frames: this.anims.generateFrameNumbers('hero', { start: 2, end: 2 }),
         })
-        this.anims.create({
+        /*this.anims.create({
             key: 'walk-up',
-            frameRate: 8,
-            repeat: -1,
-            frames: this.anims.generateFrameNumbers('hero', { start: 8, end: 11 }),
-        })
-        this.anims.create({
-            key: 'walk-left',
             frameRate: 8,
             repeat: -1,
             frames: this.anims.generateFrameNumbers('hero', { start: 12, end: 15 }),

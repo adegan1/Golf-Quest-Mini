@@ -10,6 +10,8 @@ class Overworld extends Phaser.Scene {
     }
 
     create() {
+        this.physics.world.drawDebug = false
+
         // add background image
         this.map = this.add.image(0, 0, 'outdoor_bg').setOrigin(0,0)
 

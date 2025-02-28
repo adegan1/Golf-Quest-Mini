@@ -10,6 +10,8 @@ class Indoors extends Phaser.Scene {
     }
 
     create() {
+        this.physics.world.drawDebug = false
+
         // add background image
         this.map = this.add.image(0, 0, 'indoor_bg').setOrigin(0,0)
         this.layers = this.add.image(0, 0, 'indoor_layers').setOrigin(0,0).setDepth(1)  // add layers for player to walk behind
