@@ -1,0 +1,22 @@
+[
+	[
+		{
+			"speaker" : "PROF.SANDTRAPS",
+			"dialogue" : "\"IT'S DANGEROUS TO GO ALONE!\"",
+			"newSpeaker" : "true"
+		},
+		{
+			"speaker" : "PROF.SANDTRAPS",
+			"dialogue" : "\"TAKE THIS.\""
+		},
+		{
+			"speaker" : "stevenU",
+			"dialogue" : "\"DON'T WORRY PROFESSOR...\"",
+			"newSpeaker": "true"
+		},
+		{
+			"speaker" : "stevenU",
+			"dialogue" : "\"WE'RE GONNA SINK 'EM ALL!\""
+		}
+	]
+]

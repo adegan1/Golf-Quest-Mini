@@ -28,8 +28,8 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
 class IdleState extends State {
     enter(scene, hero) {
         hero.setVelocity(0)
-        //hero.anims.play(`walk-${hero.direction}`)
-        //hero.anims.stop()
+        hero.anims.play(`walk-${hero.direction}`)
+        hero.anims.stop()
     }
 
     execute(scene, hero) {
@@ -92,6 +92,8 @@ class MoveState extends State {
         }
 
         // animate hero
-        //hero.anims.play(`walk-${hero.direction}`, true)
+        if (hero.body.velocity != 0) {
+            hero.anims.play(`walk-${hero.direction}`, true)
+        }
     }
 }

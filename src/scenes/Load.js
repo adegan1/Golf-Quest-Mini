@@ -7,12 +7,24 @@ class Load extends Phaser.Scene {
         this.load.path = './assets/'
 
         // load character visuals
+        this.load.image('sandtraps', 'sprites/characters/sandtrap_front.png')
         this.load.spritesheet('ace', 'sprites/characters/ace_spritesheet.png', {
             frameWidth: 54,
             frameHeight: 66,
         })
         this.load.image('wedge', 'sprites/characters/wedge_front.png')
         this.load.image('lina', 'sprites/characters/lina_front.png')
+
+        // load JSON (dialogue text)
+        this.load.json('dialogue', 'json/dialogue.json')
+
+        // load bitmap font
+        this.load.bitmapFont('monkey_font', 'fonts/monkey.png', 'fonts/monkey.xml')
+
+        // load dialogue assets
+        this.load.image('dialogue_box', 'sprites/dialogue_box.png')
+        this.load.image('sandtraps_portrait', 'sprites/sandtraps_portrait.png')
+        this.load.image('ace_portrait', 'sprites/ace_portrait.png')
 
         // load backgrounds
         this.load.image('indoor_bg', 'backgrounds/indoors_bg.png')
@@ -27,30 +39,34 @@ class Load extends Phaser.Scene {
         // hero animations (walking)
         this.anims.create({
             key: 'walk-down',
-            frameRate: 8,
+            frameRate: 12,
             repeat: -1,
-            frames: this.anims.generateFrameNumbers('hero', { start: 0, end: 0 }),
+            frames: this.anims.generateFrameNumbers('ace', { frames: [2, 3, 4, 3, 2, 1, 0, 1] }),
         })
         this.anims.create({
             key: 'walk-left',
-            frameRate: 8,
+            frameRate: 12,
             repeat: -1,
-            frames: this.anims.generateFrameNumbers('hero', { start: 1, end: 1 }),
+            frames: this.anims.generateFrameNumbers('ace', { frames: [7, 8, 9, 8, 7, 6, 5, 6] }),
         })
         this.anims.create({
             key: 'walk-right',
-            frameRate: 8,
+            frameRate: 12,
             repeat: -1,
-            frames: this.anims.generateFrameNumbers('hero', { start: 2, end: 2 }),
+            frames: this.anims.generateFrameNumbers('ace', { frames: [12, 13, 14, 13, 12, 11, 10, 11] }),
         })
-        /*this.anims.create({
+        this.anims.create({
             key: 'walk-up',
-            frameRate: 8,
+            frameRate: 12,
             repeat: -1,
-            frames: this.anims.generateFrameNumbers('hero', { start: 12, end: 15 }),
-        })*/
+            frames: this.anims.generateFrameNumbers('ace', { frames: [17, 18, 19, 18, 17, 16, 15, 16] }),
+        })
+
+        // create input
+        cursors = this.input.keyboard.createCursorKeys()
 
         // proceed once loading completes
-        this.scene.start('overworldScene')
+        this.scene.start('indoorsScene')
+        //this.scene.start('overworldScene')
     }
 }

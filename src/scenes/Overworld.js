@@ -19,7 +19,7 @@ class Overworld extends Phaser.Scene {
         this.wallGroup = this.add.group({ runChildUpdate: true })
 
         // add new Hero to scene (scene, x, y, key, frame, direction)
-        this.hero = new Hero(this, this.aceSpawnX, this.aceSpawnY, 'ace', 0, 'down')
+        this.hero = new Hero(this, this.aceSpawnX, this.aceSpawnY, 'ace', 0, 'down').setDepth(1)
 
         this.interact_icon = this.add.sprite(width/2, height/2, 'interact').setVisible(false)
 
@@ -64,6 +64,7 @@ class Overworld extends Phaser.Scene {
         this.heroFSM.step()
 
         this.interact_icon.setPosition(this.hero.x, this.hero.y - interactOffset)
+        this.interact_icon.setVisible(false)
 
         // if player is near door
         if (Phaser.Math.Distance.BetweenPoints(this.hero, this.door) < 65) {
@@ -73,8 +74,6 @@ class Overworld extends Phaser.Scene {
             {
                 this.scene.start('indoorsScene')
             }
-        } else {
-            this.interact_icon.setVisible(false)
         }
     }
 }

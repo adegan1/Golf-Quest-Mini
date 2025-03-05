@@ -26,3 +26,5 @@ const game = new Phaser.Game(config)
 let { width, height } = game.config
 
 let interactOffset = 70
+
+let cursors = null
