@@ -32,6 +32,9 @@ class Indoors extends Phaser.Scene {
         this.dialogueTyping = false
         this.dialogueText = null
         this.nextText = null
+
+        // sound variables
+        this.bgmVolume = .2
     }
 
     create() {
@@ -93,6 +96,10 @@ class Indoors extends Phaser.Scene {
             this.physics.world.debugGraphic.clear()
         }, this)
 
+        // play background music
+        this.bgm = this.sound.add('indoor_theme', {volume: this.bgmVolume})
+        this.bgm.loop = true
+        this.bgm.play()
     }
 
     update() {
@@ -127,6 +134,7 @@ class Indoors extends Phaser.Scene {
 
             if (this.keys.EKey.isDown)
             {
+                this.bgm.stop()
                 this.scene.start('overworldScene')
             }
         }

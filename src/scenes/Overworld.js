@@ -7,6 +7,9 @@ class Overworld extends Phaser.Scene {
         // spawn locations
         this.aceSpawnX = 1080
         this.aceSpawnY = 400
+
+        // sound variables
+        this.bgmVolume = .2
     }
 
     create() {
@@ -57,6 +60,10 @@ class Overworld extends Phaser.Scene {
             this.physics.world.debugGraphic.clear()
         }, this)
 
+        // play background music
+        this.bgm = this.sound.add('outdoor_theme', {volume: this.bgmVolume})
+        this.bgm.loop = true
+        this.bgm.play()
     }
 
     update() {
@@ -72,6 +79,7 @@ class Overworld extends Phaser.Scene {
 
             if (this.keys.EKey.isDown)
             {
+                this.bgm.stop()
                 this.scene.start('indoorsScene')
             }
         }

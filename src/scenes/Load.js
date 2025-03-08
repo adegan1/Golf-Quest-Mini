@@ -33,6 +33,10 @@ class Load extends Phaser.Scene {
 
         // load other sprites
         this.load.image('interact', 'sprites/interact.png')
+
+        // load music
+        this.load.audio('indoor_theme', 'music/indoor_theme.wav')
+        this.load.audio('outdoor_theme', 'music/outdoor_theme.wav')
     }
 
     create() {
