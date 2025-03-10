@@ -34,6 +34,11 @@ class Load extends Phaser.Scene {
         // load other sprites
         this.load.image('interact', 'sprites/interact.png')
 
+        this.load.spritesheet('mythril_putter', 'backgrounds/mythril_putter.png', {
+            frameWidth: 800,
+            frameHeight: 600,
+        })
+
         // load music
         this.load.audio('indoor_theme', 'music/indoor_theme.wav')
         this.load.audio('outdoor_theme', 'music/outdoor_theme.wav')
@@ -64,6 +69,13 @@ class Load extends Phaser.Scene {
             frameRate: 12,
             repeat: -1,
             frames: this.anims.generateFrameNumbers('ace', { frames: [17, 18, 19, 18, 17, 16, 15, 16] }),
+        })
+
+        this.anims.create({
+            key: 'mythril-putter-get',
+            frameRate: 2,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('mythril_putter', { frames: [0, 1] }),
         })
 
         // create input

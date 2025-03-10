@@ -42,8 +42,10 @@ class IdleState extends State {
 
         // transition to move if pressing a movement key
         if(left.isDown || right.isDown || up.isDown || down.isDown || WKey.isDown || AKey.isDown || SKey.isDown || DKey.isDown) {
-            this.stateMachine.transition('move')
-            return
+            if (!scene.inDialogue) {
+                this.stateMachine.transition('move')
+                return
+            }
         }
     }
 }
@@ -94,6 +96,11 @@ class MoveState extends State {
         // animate hero
         if (hero.body.velocity != 0) {
             hero.anims.play(`walk-${hero.direction}`, true)
+        }
+
+        if (scene.inDialogue){
+            // player cannot move during dialogue
+            this.stateMachine.transition('idle')
         }
     }
 }

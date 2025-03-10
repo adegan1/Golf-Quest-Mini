@@ -4,9 +4,8 @@ class Indoors extends Phaser.Scene {
     }
 
     init() {
-        // spawn locations
-        this.aceSpawnX = 400
-        this.aceSpawnY = 300
+        // door cooldown to avoid door spam
+        this.doorCooldown = 25
 
         // dialogue variables
         this.inDialogue = false
@@ -19,6 +18,11 @@ class Indoors extends Phaser.Scene {
         this.TEXT_Y = 450
         this.TEXT_SIZE = 36
         this.TEXT_MAX_WIDTH = 700
+
+        this.NEXT_TEXT = '[SPACE]'
+        this.NEXT_X = 675
+        this.NEXT_Y = 542
+        this.NEXT_SIZE = 20
 
         this.LETTER_TIMER = 2
 
@@ -39,6 +43,9 @@ class Indoors extends Phaser.Scene {
 
     create() {
         this.physics.world.drawDebug = false
+        
+        // input
+        cursors = this.input.keyboard.createCursorKeys()
 
         // add background image
         this.map = this.add.image(0, 0, 'indoor_bg').setOrigin(0,0)
@@ -48,7 +55,7 @@ class Indoors extends Phaser.Scene {
         this.wallGroup = this.add.group({ runChildUpdate: true })
 
         // add new Hero to scene (scene, x, y, key, frame, direction)
-        this.hero = new Hero(this, this.aceSpawnX, this.aceSpawnY, 'ace', 0, 'down').setDepth(1)
+        this.hero = new Hero(this, indoorX, indoorY, 'ace', 0, 'down').setDepth(1)
 
         this.interact_icon = this.add.sprite(width/2, height/2, 'interact').setVisible(false).setDepth(3)
 
@@ -74,10 +81,15 @@ class Indoors extends Phaser.Scene {
         this.dialogue = this.cache.json.get('dialogue')
 
         this.dialogueBox = this.add.sprite(this.DBOX_X, this.DBOX_Y, 'dialogue_box').setScale(.85).setDepth(4).setVisible(false)
-        this.dialogueText = this.add.bitmapText(this.TEXT_X, this.TEXT_Y, this.DBOX_FONT, 'PROF.SANDTRAPS', this.TEXT_SIZE).setDepth(4).setVisible(false)
+        this.dialogueText = this.add.bitmapText(this.TEXT_X, this.TEXT_Y, this.DBOX_FONT, '', this.TEXT_SIZE).setDepth(4).setVisible(false)
+        this.nextText = this.add.bitmapText(this.NEXT_X, this.NEXT_Y, this.DBOX_FONT, '', this.NEXT_SIZE).setDepth(4).setVisible(false)
 
         this.acePortrait = this.add.sprite(this.PORTRAIT_X, this.PORTRAIT_Y, 'ace_portrait').setScale(.85).setOrigin(0).setDepth(4).setVisible(false)
         this.sandtrapsPortrait = this.add.sprite(this.PORTRAIT_X, this.PORTRAIT_Y, 'sandtraps_portrait').setScale(.85).setOrigin(0).setDepth(4).setVisible(false)
+
+        // add mythril putter screen
+        this.mythrilPutter = this.add.sprite(0, 0, 'mythril_putter').setOrigin(0,0).setDepth(5).setVisible(false)
+        this.mythrilPutter.anims.play('mythril-putter-get')
 
         // set up camera
         this.physics.world.setBounds(0, 0, this.map.width, this.map.height)
@@ -103,6 +115,9 @@ class Indoors extends Phaser.Scene {
     }
 
     update() {
+        // decrement door cooldown timer
+        if (this.doorCooldown > 0) { this.doorCooldown-- }
+
         // make sure we step (ie update) the hero's state machine
         this.heroFSM.step()
 
@@ -116,11 +131,12 @@ class Indoors extends Phaser.Scene {
         this.interact_icon.setVisible(false)
 
         // if player is near sandtraps
-        if (Phaser.Math.Distance.BetweenPoints(this.hero, this.sandtraps) < 70 && !this.inDialogue) {
+        if (Phaser.Math.Distance.BetweenPoints(this.hero, this.sandtraps) < 70 && sandtrapDialogue) {
             this.interact_icon.setVisible(true)
 
             if (this.keys.EKey.isDown)
             {
+                sandtrapDialogue = false
                 this.inDialogue = true
 
                 // start first dialogue conversation
@@ -129,19 +145,24 @@ class Indoors extends Phaser.Scene {
         }
 
         // if player is near door
-        if (Phaser.Math.Distance.BetweenPoints(this.hero, this.door) < 65) {
+        if (Phaser.Math.Distance.BetweenPoints(this.hero, this.door) < 65 && !sandtrapDialogue && this.doorCooldown <= 0) {
             this.interact_icon.setVisible(true)
 
-            if (this.keys.EKey.isDown)
+            if (Phaser.Input.Keyboard.JustDown(this.keys.EKey))
             {
+                indoorX = this.hero.x
+                indoorY = this.hero.y
+
                 this.bgm.stop()
                 this.scene.start('overworldScene')
             }
         }
 
         // check for dialogue press
-        if(Phaser.Input.Keyboard.JustDown(cursors.space) && !this.dialogTyping) {
-            this.typeText() // trigger dialog
+        if(Phaser.Input.Keyboard.JustDown(cursors.space) && this.inDialogue) {
+            if (!this.dialogTyping) {
+                this.typeText() // trigger dialog
+            }
         }
     }
 
@@ -150,21 +171,14 @@ class Indoors extends Phaser.Scene {
         // show dialogue
         this.dialogueBox.visible = true
         this.dialogueText.visible = true
+        this.nextText.visible = true
 
         // lock input while typing
         this.dialogueTyping = true
 
         // clear text
         this.dialogueText.text = ''
-
-        /* JSON dialogue structure: 
-            - each array within the main JSON array is a "conversation"
-            - each object within a "conversation" is a "line"
-            - each "line" can have 3 properties: 
-                1. a speaker (required)
-                2. the dialogue text (required)
-                3. an (optional) flag indicating if this speaker is new
-        */
+        this.nextText.text = ''
 
         // make sure there are lines left to read in this convo, otherwise jump to next convo
         if(this.dialogueLine > this.dialogue[this.dialogueConvo].length - 1) {
@@ -176,50 +190,33 @@ class Indoors extends Phaser.Scene {
         
         // make sure we haven't run out of conversations...
         if(this.dialogueConvo >= this.dialogue.length) {
-            // here I'm exiting the final conversation to return to the title...
-            // ...but you could add alternate logic if needed
-            console.log('End of Conversations')
-            // tween out prior speaker's image
-            /*if(this.dialogueLastSpeaker) {
-                this.tweens.add({
-                    targets: this[this.dialogueLastSpeaker],
-                    x: this.OFFSCREEN_X,
-                    duration: this.tweenDuration,
-                    ease: 'Linear',
-                    onComplete: () => {
-                        this.scene.start('titleScene')
-                    }
-                })
-            }*/
+            // end dialogue
             // make text box invisible
+            this.inDialogue = false
             this.dialogueBox.visible = false
+            this.dialogueLastSpeaker.visible = false
+            this.dialogueSpeaker.visible = false
 
         } else {
             // if not, set current speaker
             this.dialogueSpeaker = this.dialogue[this.dialogueConvo][this.dialogueLine]['speaker']
+            // correct potraits
+            if (this.dialogueSpeaker == 'PROF.SANDTRAPS') { this.dialogueSpeaker = this.sandtrapsPortrait }
+            else if (this.dialogueSpeaker == 'stevenU') { this.dialogueSpeaker = this.acePortrait }
+
             // check if there's a new speaker (for exit/enter animations)
             if(this.dialogue[this.dialogueConvo][this.dialogueLine]['newSpeaker']) {
-                // tween out prior speaker's image
-                /*if(this.dialogueLastSpeaker) {
-                    this.tweens.add({
-                        targets: this[this.dialogueLastSpeaker],
-                        x: this.OFFSCREEN_X,
-                        duration: this.tweenDuration,
-                        ease: 'Linear'
-                    })
+                // set last speaker invisible
+                if(this.dialogueLastSpeaker) {
+                    this.dialogueLastSpeaker.visible = false
                 }
-                // tween in new speaker's image
-                this.tweens.add({
-                    targets: this[this.dialogueSpeaker],
-                    x: this.DBOX_X + 50,
-                    duration: this.tweenDuration,
-                    ease: 'Linear'
-                })*/
+                // set current speaker visible
+                this.dialogueSpeaker.visible = true
             }
 
             // build dialogue (concatenate speaker + colon + line of text)
             this.combinedDialogue = 
-                this.dialogue[this.dialogueConvo][this.dialogueLine]['speaker'].toUpperCase() 
+                this.dialogue[this.dialogueConvo][this.dialogueLine]['speaker']
                 + '\n' 
                 + this.dialogue[this.dialogueConvo][this.dialogueLine]['dialogue']
 
@@ -237,6 +234,7 @@ class Indoors extends Phaser.Scene {
                     // (necessary since Phaser 3 no longer seems to have an onComplete event)
                     if(this.textTimer.getRepeatCount() == 0) {
                         // show prompt for more text
+                        this.nextText = this.add.bitmapText(this.NEXT_X, this.NEXT_Y, this.DBOX_FONT, this.NEXT_TEXT, this.NEXT_SIZE).setOrigin(1).setDepth(4)
                         this.dialogueTyping = false   // un-lock input
                         this.textTimer.destroy()    // destroy timer
                     }

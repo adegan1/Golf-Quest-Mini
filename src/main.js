@@ -28,3 +28,11 @@ let { width, height } = game.config
 let interactOffset = 70
 
 let cursors = null
+let sandtrapDialogue = true
+
+// spawn location variables
+let indoorX = 400
+let indoorY = 300
+
+let outdoorX = 1090
+let outdoorY = 200

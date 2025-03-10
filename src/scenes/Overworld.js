@@ -4,9 +4,8 @@ class Overworld extends Phaser.Scene {
     }
 
     init() {
-        // spawn locations
-        this.aceSpawnX = 1080
-        this.aceSpawnY = 400
+        // door cooldown to avoid door spam
+        this.doorCooldown = 25
 
         // sound variables
         this.bgmVolume = .2
@@ -22,7 +21,7 @@ class Overworld extends Phaser.Scene {
         this.wallGroup = this.add.group({ runChildUpdate: true })
 
         // add new Hero to scene (scene, x, y, key, frame, direction)
-        this.hero = new Hero(this, this.aceSpawnX, this.aceSpawnY, 'ace', 0, 'down').setDepth(1)
+        this.hero = new Hero(this, outdoorX, outdoorY, 'ace', 0, 'down').setDepth(1)
 
         this.interact_icon = this.add.sprite(width/2, height/2, 'interact').setVisible(false)
 
@@ -67,6 +66,9 @@ class Overworld extends Phaser.Scene {
     }
 
     update() {
+        // decrement door cooldown timer
+        if (this.doorCooldown > 0) { this.doorCooldown-- }
+
         // make sure we step (ie update) the hero's state machine
         this.heroFSM.step()
 
@@ -74,11 +76,14 @@ class Overworld extends Phaser.Scene {
         this.interact_icon.setVisible(false)
 
         // if player is near door
-        if (Phaser.Math.Distance.BetweenPoints(this.hero, this.door) < 65) {
+        if (Phaser.Math.Distance.BetweenPoints(this.hero, this.door) < 65 && this.doorCooldown <= 0) {
             this.interact_icon.setVisible(true)
 
-            if (this.keys.EKey.isDown)
+            if (Phaser.Input.Keyboard.JustDown(this.keys.EKey))
             {
+                outdoorX = this.hero.x
+                outdoorY = this.hero.y
+
                 this.bgm.stop()
                 this.scene.start('indoorsScene')
             }
