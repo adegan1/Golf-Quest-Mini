@@ -10,6 +10,11 @@
 			"dialogue" : "\"TAKE THIS.\""
 		},
 		{
+			"speaker" : "item",
+			"dialogue" : "you got an item!!!",
+			"itemGet" : "true"
+		},
+		{
 			"speaker" : "stevenU",
 			"dialogue" : "\"DON'T WORRY PROFESSOR...\"",
 			"newSpeaker": "true"

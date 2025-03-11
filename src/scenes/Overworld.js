@@ -8,7 +8,8 @@ class Overworld extends Phaser.Scene {
         this.doorCooldown = 25
 
         // sound variables
-        this.bgmVolume = .2
+        this.sfxVolume = .3
+        this.bgmVolume = .15
     }
 
     create() {
@@ -59,6 +60,9 @@ class Overworld extends Phaser.Scene {
             this.physics.world.debugGraphic.clear()
         }, this)
 
+        // add sound effects
+        this.doorClose = this.sound.add('door_close', { volume: this.sfxVolume })
+
         // play background music
         this.bgm = this.sound.add('outdoor_theme', {volume: this.bgmVolume})
         this.bgm.loop = true
@@ -84,6 +88,7 @@ class Overworld extends Phaser.Scene {
                 outdoorX = this.hero.x
                 outdoorY = this.hero.y
 
+                this.doorClose.play()
                 this.bgm.stop()
                 this.scene.start('indoorsScene')
             }

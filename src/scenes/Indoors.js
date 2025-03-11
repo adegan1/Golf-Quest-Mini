@@ -38,7 +38,8 @@ class Indoors extends Phaser.Scene {
         this.nextText = null
 
         // sound variables
-        this.bgmVolume = .2
+        this.sfxVolume = .3
+        this.bgmVolume = .15
     }
 
     create() {
@@ -108,6 +109,11 @@ class Indoors extends Phaser.Scene {
             this.physics.world.debugGraphic.clear()
         }, this)
 
+        // add sound effects
+        this.dialogueBlip = this.sound.add('dialogue_blip', { volume: this.sfxVolume })
+        this.itemGet = this.sound.add('item_get', { volume: this.sfxVolume })
+        this.doorClose = this.sound.add('door_close', { volume: this.sfxVolume })
+
         // play background music
         this.bgm = this.sound.add('indoor_theme', {volume: this.bgmVolume})
         this.bgm.loop = true
@@ -153,6 +159,7 @@ class Indoors extends Phaser.Scene {
                 indoorX = this.hero.x
                 indoorY = this.hero.y
 
+                this.doorClose.play()
                 this.bgm.stop()
                 this.scene.start('overworldScene')
             }
@@ -180,6 +187,9 @@ class Indoors extends Phaser.Scene {
         this.dialogueText.text = ''
         this.nextText.text = ''
 
+        // play dialogue blip
+        this.dialogueBlip.play()
+
         // make sure there are lines left to read in this convo, otherwise jump to next convo
         if(this.dialogueLine > this.dialogue[this.dialogueConvo].length - 1) {
             this.dialogueLine = 0
@@ -201,7 +211,7 @@ class Indoors extends Phaser.Scene {
             // if not, set current speaker
             this.dialogueSpeaker = this.dialogue[this.dialogueConvo][this.dialogueLine]['speaker']
             // correct potraits
-            if (this.dialogueSpeaker == 'PROF.SANDTRAPS') { this.dialogueSpeaker = this.sandtrapsPortrait }
+            if (this.dialogueSpeaker == 'PROF.SANDTRAPS' || this.dialogueSpeaker == 'item') { this.dialogueSpeaker = this.sandtrapsPortrait }
             else if (this.dialogueSpeaker == 'stevenU') { this.dialogueSpeaker = this.acePortrait }
 
             // check if there's a new speaker (for exit/enter animations)
@@ -212,6 +222,15 @@ class Indoors extends Phaser.Scene {
                 }
                 // set current speaker visible
                 this.dialogueSpeaker.visible = true
+            }
+
+            // check if there is an item obtained
+            if(this.dialogue[this.dialogueConvo][this.dialogueLine]['itemGet']) {
+                this.itemGet.play()
+
+                this.mythrilPutter.visible = true
+            } else {
+                this.mythrilPutter.visible = false
             }
 
             // build dialogue (concatenate speaker + colon + line of text)

@@ -39,6 +39,11 @@ class Load extends Phaser.Scene {
             frameHeight: 600,
         })
 
+        // load sfx
+        this.load.audio('dialogue_blip', 'sfx/dialogueBlip.wav')
+        this.load.audio('item_get', 'sfx/itemGet.wav')
+        this.load.audio('door_close', 'sfx/doorClose.wav')
+
         // load music
         this.load.audio('indoor_theme', 'music/indoor_theme.wav')
         this.load.audio('outdoor_theme', 'music/outdoor_theme.wav')
