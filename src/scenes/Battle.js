@@ -33,10 +33,10 @@ class Battle extends Phaser.Scene {
         // add character sprites
         this.windmill = this.add.sprite(1000, 2, 'battle_windmill').setOrigin(0,0).setScale(.75)
 
-        this.hero = this.add.sprite(-200, 280, 'ace_battle').setOrigin(0,0).setScale(.65)
+        this.hero = this.add.sprite(-200, 280, 'ace_battle').setOrigin(0,0).setScale(.65).setDepth(2)
         this.hero.anims.play('battle-idle')
 
-        //this.hitBall = this.add.sprite(100, 100, 'hit_ball').setOrigin(0,0).setScale(.65)
+        this.hitBall = this.add.sprite(650, 475, 'hit_ball').setOrigin(0,0).setScale(.5).setVisible(false).setAngle(20).setDepth(1)
 
         // add menus
         this.introBox = this.add.sprite(450, 50, 'enter_fight_box').setOrigin(0,0).setScale(.8).setVisible(true).setDepth(5)
@@ -50,6 +50,10 @@ class Battle extends Phaser.Scene {
         this.enemyText = this.add.bitmapText(490, 40, this.FONT, 'WINDMILL   LV3', this.TEXT_SIZE).setVisible(false)
         this.healthBarBack = this.add.sprite(610, 95, 'health_bar_back').setScale(.75)
         this.healthBarFront = this.add.sprite(610, 95, 'health_bar_front').setScale(.75)
+
+        // add par animation
+        this.parSprite = this.add.sprite(475, 135, 'par_sprite').setOrigin(0,0).setDepth(5).setVisible(false).setScale(.8)
+        this.parSprite.anims.play('par-anim')
 
         // add battle tweens
         let windmillEnter = this.tweens.add({
@@ -65,6 +69,69 @@ class Battle extends Phaser.Scene {
             targets: this.hero,
             x: 500,
             duration: 800,
+        })
+
+        // add attack tweens
+        this.heroCharge = this.tweens.add({
+            paused: true,
+            targets: this.hero,
+            scale: {from: .65, to: .75},
+            duration: 550,
+            hold: 750,
+            onStart: () => {
+                this.hero.anims.play('battle-attack')
+            },
+            onComplete: () => {
+                this.hero.anims.play('battle-finish')
+                this.hitBall.visible = true
+                this.ballHit.play()
+                this.ballFly.restart()
+            }
+        })
+        this.ballFly = this.tweens.add({
+            paused: true,
+            targets: this.hitBall,
+            x: {from: 675, to: 200},
+            y: {from: 450, to: 175},
+            duration: 400,
+            onComplete: () => {
+                this.hitBall.visible = false
+                this.enemyFlash.restart()
+                this.healthDrop.restart()
+            }
+        })
+        this.enemyFlash = this.tweens.add({
+            paused: true,
+            targets: this.windmill,
+            alpha: {from: 1, to: .2},
+            repeat: 4,
+            yoyo: true,
+            duration: 80,
+        })
+        this.healthDrop = this.tweens.add({
+            paused: true,
+            targets: this.healthBarFront,
+            scaleX: {from: .75, to: 0},
+            x: {from: 610, to: 485},
+            duration: 1500,
+            onComplete: () => {
+                this.parSprite.visible = true
+                this.par.play()
+                this.enemyDie.restart()
+            }
+        })
+        this.enemyDie = this.tweens.add({
+            paused: true,
+            targets: this.windmill,
+            alpha: {from: 1, to: 0},
+            y: {from: 2, to: 50},
+            duration: 300,
+            hold: 1000,
+            onComplete: () => {
+                defeatedEnemy = true
+                this.bgm.stop()
+                this.scene.start('overworldScene')
+            }
         })
 
         // setup keyboard input

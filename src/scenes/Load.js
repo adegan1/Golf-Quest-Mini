@@ -57,6 +57,10 @@ class Load extends Phaser.Scene {
             frameWidth: 800,
             frameHeight: 600,
         })
+        this.load.spritesheet('par_sprite', 'sprites/parSprite.png', {
+            frameWidth: 309,
+            frameHeight: 178,
+        })
 
         // load sfx
         this.load.audio('dialogue_blip', 'sfx/dialogueBlip.wav')
@@ -118,22 +122,29 @@ class Load extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('ace_battle', { frames: [0] }),
         })
         this.anims.create({
-            key: 'battle-charge',
-            frameRate: 12,
-            frames: this.anims.generateFrameNumbers('ace_battle', { frames: [1] }),
+            key: 'battle-attack',
+            frameRate: 6,
+            frames: this.anims.generateFrameNumbers('ace_battle', { frames: [1, 1, 1, 1, 2, 3, 3, 2] }),
         })
         this.anims.create({
-            key: 'battle-swing',
+            key: 'battle-finish',
             frameRate: 1,
-            frames: this.anims.generateFrameNumbers('ace_battle', { frames: [2, 3, 2, 4] }),
+            frames: this.anims.generateFrameNumbers('ace_battle', { frames: [4] }),
+        })
+
+        this.anims.create({
+            key: 'par-anim',
+            frameRate: 6,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('par_sprite', { frames: [0, 1] }),
         })
 
         // create input
         cursors = this.input.keyboard.createCursorKeys()
 
         // proceed once loading completes
-        //this.scene.start('indoorsScene')
+        this.scene.start('indoorsScene')
         //this.scene.start('overworldScene')
-        this.scene.start('battleScene')
+        //this.scene.start('battleScene')
     }
 }

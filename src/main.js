@@ -36,3 +36,4 @@ let indoorY = 300
 
 let outdoorX = 1090
 let outdoorY = 200
+let defeatedEnemy = false

@@ -242,6 +242,8 @@ class PuttOption extends State {
             // select
             if(EKey.isDown || space.isDown || DKey.isDown || right.isDown) {
                 scene.menuSelect.play()
+                scene.heroCharge.restart()
+                scene.showMenu = false
                 this.stateMachine.transition('putt')
             }
         }
@@ -287,6 +289,8 @@ class ChipOption extends State {
             // select
             if(EKey.isDown || space.isDown || DKey.isDown || right.isDown) {
                 scene.menuSelect.play()
+                scene.heroCharge.restart()
+                scene.showMenu = false
                 this.stateMachine.transition('chip')
             }
         }
@@ -332,6 +336,8 @@ class DriveOption extends State {
             // select
             if(EKey.isDown || space.isDown || DKey.isDown || right.isDown) {
                 scene.menuSelect.play()
+                scene.heroCharge.restart()
+                scene.showMenu = false
                 this.stateMachine.transition('drive')
             }
         }
@@ -343,9 +349,9 @@ class MythrilPutter extends State {
         scene.menuMove.play()
         scene.menuTimer = scene.menuCooldown
 
-        scene.selector.y = scene.selector1
-        scene.option1.text = 'MYTHRIL PUTTER'
-        scene.option2.text = ''
+        scene.selector.y = scene.selector1 + 20
+        scene.option1.text = 'MYTHRIL'
+        scene.option2.text = 'PUTTER'
         scene.option3.text = ''
 
         //console.log('mythril putter')

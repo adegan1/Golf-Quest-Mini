@@ -46,9 +46,12 @@ class Overworld extends Phaser.Scene {
 
         // add enemy encounter objects and tweens
         this.alertBox = this.add.sprite(width * 1.49, height * 1.8, 'alertBox').setVisible(false).setScale(.85).setDepth(5)
-        this.windmill = this.add.sprite(width * .52, height * 1.59, 'windmill').setVisible(true).setScale(.8)
         this.tweenCamera = this.add.sprite(0, 0, 'ace').setVisible(false)
         this.circleTransition = this.add.sprite(width * 1.05, height * 1.65, 'circleTransition').setVisible(false).setDepth(10)
+
+        if (!defeatedEnemy) {
+            this.windmill = this.add.sprite(width * .52, height * 1.59, 'windmill').setVisible(true).setScale(.8)
+        }
 
         let encounterHeroTween = this.tweens.chain({
             paused: true,
@@ -106,6 +109,9 @@ class Overworld extends Phaser.Scene {
                 this.enterBattle.play()
             },
             onComplete: () => {
+                outdoorX = this.hero.x
+                outdoorY = this.hero.y
+
                 this.bgm.stop()
                 this.scene.start('battleScene')
             }
@@ -114,17 +120,19 @@ class Overworld extends Phaser.Scene {
         // enemy encounter trigger
         this.enemyEncounter = this.physics.add.sprite(width * 1.125, height * 1.65).setOrigin(0, 0);    this.enemyEncounter.body.setSize(100, 200).setAllowGravity(false);
 
-        this.physics.add.overlap(this.hero, this.enemyEncounter, () => {
-            if (!this.encounteredEnemy) {
-                this.encounteredEnemy = true
-                this.alertBox.visible = true
-                this.enemyAlert.play()
-
-                encounterHeroTween.restart()
-                encounterWindmillTween.restart()
-                encounterCameraTween.restart()
-            }
-        })
+        if (!defeatedEnemy){
+            this.physics.add.overlap(this.hero, this.enemyEncounter, () => {
+                if (!this.encounteredEnemy) {
+                    this.encounteredEnemy = true
+                    this.alertBox.visible = true
+                    this.enemyAlert.play()
+    
+                    encounterHeroTween.restart()
+                    encounterWindmillTween.restart()
+                    encounterCameraTween.restart()
+                }
+            })
+        }
 
         // set up camera
         this.cameras.main.setBounds(0, 0, this.map.width, this.map.height)
