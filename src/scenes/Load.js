@@ -12,8 +12,13 @@ class Load extends Phaser.Scene {
             frameWidth: 54,
             frameHeight: 66,
         })
+        this.load.spritesheet('ace_battle', 'sprites/characters/ace_battle_spritesheet.png', {
+            frameWidth: 280,
+            frameHeight: 363,
+        })
         this.load.image('wedge', 'sprites/characters/wedge_front.png')
         this.load.image('lina', 'sprites/characters/lina_front.png')
+        this.load.image('battle_windmill', 'sprites/battle_windmill.png')
 
         // load JSON (dialogue text)
         this.load.json('dialogue', 'json/dialogue.json')
@@ -30,9 +35,23 @@ class Load extends Phaser.Scene {
         this.load.image('indoor_bg', 'backgrounds/indoors_bg.png')
         this.load.image('indoor_layers', 'backgrounds/indoors_layers.png')
         this.load.image('outdoor_bg', 'backgrounds/outdoor_bg.png')
+        this.load.image('battle_bg', 'backgrounds/battle_bg.png')
 
         // load other sprites
         this.load.image('interact', 'sprites/interact.png')
+        this.load.image('windmill', 'sprites/windmill.png')
+        this.load.image('alertBox', 'sprites/enemy_alert.png')
+        this.load.image('hit_ball', 'sprites/hit_ball.png')
+
+        this.load.image('circleTransition', 'sprites/circleTransition.png')
+        this.load.image('screenTransition', 'sprites/screenTransition.png')
+
+        this.load.image('enter_fight_box', 'sprites/enter_fight_box.png')
+        this.load.image('battle_menu', 'sprites/battle_options.png')
+        this.load.image('selector', 'sprites/selector.png')
+
+        this.load.image('health_bar_back', 'sprites/health_bar_back.png')
+        this.load.image('health_bar_front', 'sprites/health_bar_front.png')
 
         this.load.spritesheet('mythril_putter', 'backgrounds/mythril_putter.png', {
             frameWidth: 800,
@@ -43,10 +62,19 @@ class Load extends Phaser.Scene {
         this.load.audio('dialogue_blip', 'sfx/dialogueBlip.wav')
         this.load.audio('item_get', 'sfx/itemGet.wav')
         this.load.audio('door_close', 'sfx/doorClose.wav')
+        this.load.audio('enemy_alert', 'sfx/warning.wav')
+        this.load.audio('enter_battle', 'sfx/enterBattle.wav')
+
+        this.load.audio('menu_blip', 'sfx/menuBlip.wav')
+        this.load.audio('menu_move', 'sfx/menuMove.wav')
+        this.load.audio('menu_select', 'sfx/menuSelect.wav')
+        this.load.audio('ball_hit', 'sfx/ballHit.wav')
+        this.load.audio('par', 'sfx/par.wav')
 
         // load music
         this.load.audio('indoor_theme', 'music/indoor_theme.wav')
         this.load.audio('outdoor_theme', 'music/outdoor_theme.wav')
+        this.load.audio('battle_theme', 'music/battle_theme.wav')
     }
 
     create() {
@@ -83,11 +111,29 @@ class Load extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('mythril_putter', { frames: [0, 1] }),
         })
 
+        // hero battle animations
+        this.anims.create({
+            key: 'battle-idle',
+            frameRate: 1,
+            frames: this.anims.generateFrameNumbers('ace_battle', { frames: [0] }),
+        })
+        this.anims.create({
+            key: 'battle-charge',
+            frameRate: 12,
+            frames: this.anims.generateFrameNumbers('ace_battle', { frames: [1] }),
+        })
+        this.anims.create({
+            key: 'battle-swing',
+            frameRate: 1,
+            frames: this.anims.generateFrameNumbers('ace_battle', { frames: [2, 3, 2, 4] }),
+        })
+
         // create input
         cursors = this.input.keyboard.createCursorKeys()
 
         // proceed once loading completes
-        this.scene.start('indoorsScene')
+        //this.scene.start('indoorsScene')
         //this.scene.start('overworldScene')
+        this.scene.start('battleScene')
     }
 }

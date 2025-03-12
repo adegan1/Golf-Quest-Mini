@@ -7,6 +7,9 @@ class Overworld extends Phaser.Scene {
         // door cooldown to avoid door spam
         this.doorCooldown = 25
 
+        // scene variables
+        this.encounteredEnemy = false
+
         // sound variables
         this.sfxVolume = .3
         this.bgmVolume = .15
@@ -41,6 +44,88 @@ class Overworld extends Phaser.Scene {
         // add interactable door
         this.door = this.physics.add.sprite(width * 1.345, height / 3.5).setOrigin(0, 0);    this.door.body.setSize(110, 60).setAllowGravity(false);
 
+        // add enemy encounter objects and tweens
+        this.alertBox = this.add.sprite(width * 1.49, height * 1.8, 'alertBox').setVisible(false).setScale(.85).setDepth(5)
+        this.windmill = this.add.sprite(width * .52, height * 1.59, 'windmill').setVisible(true).setScale(.8)
+        this.tweenCamera = this.add.sprite(0, 0, 'ace').setVisible(false)
+        this.circleTransition = this.add.sprite(width * 1.05, height * 1.65, 'circleTransition').setVisible(false).setDepth(10)
+
+        let encounterHeroTween = this.tweens.chain({
+            paused: true,
+            tweens: [
+                {
+                    delay: 200,
+                    targets: this.hero,
+                    x: 890,
+                    duration: 1000
+                }
+            ]
+        })
+
+        let encounterWindmillTween = this.tweens.chain({
+            paused: true,
+            tweens: [
+                {
+                    delay: 200,
+                    targets: this.windmill,
+                    x: 775,
+                    duration: 1000,
+                }
+            ]
+        })
+
+        let encounterCameraTween = this.tweens.chain({
+            paused: true,
+            tweens: [
+                {
+                    delay: 200,
+                    targets: this.tweenCamera,
+                    x: 725,
+                    duration: 1000,
+                    onStart: () => {
+                        this.tweenCamera.x = this.hero.x
+                        this.tweenCamera.y = this.hero.y
+                        this.cameras.main.startFollow(this.tweenCamera, false, 0.5, 0.5)
+                    },
+                    onComplete: () => {
+                        this.alertBox.visible = false
+                        transitionTween.restart()
+                    }
+                }
+            ]
+        })
+
+        let transitionTween = this.tweens.add({
+            paused: true,
+            delay: 200,
+            targets: this.circleTransition,
+            scale: {from: 10, to: .5},
+            duration: 750,
+            onStart: () => {
+                this.circleTransition.visible = true
+                this.enterBattle.play()
+            },
+            onComplete: () => {
+                this.bgm.stop()
+                this.scene.start('battleScene')
+            }
+        })
+
+        // enemy encounter trigger
+        this.enemyEncounter = this.physics.add.sprite(width * 1.125, height * 1.65).setOrigin(0, 0);    this.enemyEncounter.body.setSize(100, 200).setAllowGravity(false);
+
+        this.physics.add.overlap(this.hero, this.enemyEncounter, () => {
+            if (!this.encounteredEnemy) {
+                this.encounteredEnemy = true
+                this.alertBox.visible = true
+                this.enemyAlert.play()
+
+                encounterHeroTween.restart()
+                encounterWindmillTween.restart()
+                encounterCameraTween.restart()
+            }
+        })
+
         // set up camera
         this.cameras.main.setBounds(0, 0, this.map.width, this.map.height)
         this.cameras.main.startFollow(this.hero, false, 0.5, 0.5)
@@ -62,6 +147,8 @@ class Overworld extends Phaser.Scene {
 
         // add sound effects
         this.doorClose = this.sound.add('door_close', { volume: this.sfxVolume })
+        this.enemyAlert = this.sound.add('enemy_alert', { volume: this.sfxVolume / 2 })
+        this.enterBattle = this.sound.add('enter_battle', { volume: this.sfxVolume })
 
         // play background music
         this.bgm = this.sound.add('outdoor_theme', {volume: this.bgmVolume})

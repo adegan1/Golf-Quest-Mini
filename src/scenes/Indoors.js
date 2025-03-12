@@ -104,10 +104,10 @@ class Indoors extends Phaser.Scene {
         this.keys.EKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E)
 
         // debug key listener (assigned to K key)
-        this.input.keyboard.on('keydown-K', function() {
+        /*this.input.keyboard.on('keydown-K', function() {
             this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
             this.physics.world.debugGraphic.clear()
-        }, this)
+        }, this)*/
 
         // add sound effects
         this.dialogueBlip = this.sound.add('dialogue_blip', { volume: this.sfxVolume })
