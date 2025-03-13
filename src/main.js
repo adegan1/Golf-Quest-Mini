@@ -18,7 +18,7 @@ const config = {
             debug: true
         }
     },
-    scene: [ Menu, Load, Indoors, Overworld, Battle ]
+    scene: [ Menu, Load, Indoors, Overworld, Battle, GameOver ]
 }
 
 const game = new Phaser.Game(config)
@@ -26,9 +26,12 @@ const game = new Phaser.Game(config)
 let { width, height } = game.config
 
 let interactOffset = 70
-
 let cursors = null
+
+// progress flags
+let startFade = true
 let sandtrapDialogue = true
+let defeatedEnemy = false
 
 // spawn location variables
 let indoorX = 400
@@ -36,4 +39,7 @@ let indoorY = 300
 
 let outdoorX = 1090
 let outdoorY = 200
-let defeatedEnemy = false
+
+// sound variables
+let sfxVolume = .3
+let bgmVolume = .15

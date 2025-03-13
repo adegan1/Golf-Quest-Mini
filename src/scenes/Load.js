@@ -36,9 +36,11 @@ class Load extends Phaser.Scene {
         this.load.image('indoor_layers', 'backgrounds/indoors_layers.png')
         this.load.image('outdoor_bg', 'backgrounds/outdoor_bg.png')
         this.load.image('battle_bg', 'backgrounds/battle_bg.png')
+        this.load.image('gameover_bg', 'backgrounds/gameover_bg.png')
 
         // load other sprites
         this.load.image('interact', 'sprites/interact.png')
+        this.load.image('door_indicator', 'sprites/door_indicator.png')
         this.load.image('windmill', 'sprites/windmill.png')
         this.load.image('alertBox', 'sprites/enemy_alert.png')
         this.load.image('hit_ball', 'sprites/hit_ball.png')
@@ -79,6 +81,7 @@ class Load extends Phaser.Scene {
         this.load.audio('indoor_theme', 'music/indoor_theme.wav')
         this.load.audio('outdoor_theme', 'music/outdoor_theme.wav')
         this.load.audio('battle_theme', 'music/battle_theme.wav')
+        this.load.audio('ending_theme', 'music/ending_theme.wav')
     }
 
     create() {
@@ -146,5 +149,6 @@ class Load extends Phaser.Scene {
         this.scene.start('indoorsScene')
         //this.scene.start('overworldScene')
         //this.scene.start('battleScene')
+        //this.scene.start('gameoverScene')
     }
 }

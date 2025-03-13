@@ -4,10 +4,6 @@ class Battle extends Phaser.Scene {
     }
 
     init() {
-        // sound variables
-        this.sfxVolume = .3
-        this.bgmVolume = .15
-
         // selector locations
         this.selector1 = 420
         this.selector2 = 460
@@ -18,7 +14,7 @@ class Battle extends Phaser.Scene {
         this.TEXT_SIZE = 44
 
         // menu variables
-        this.menuCooldown = 20
+        this.menuCooldown = 60
         this.menuTimer = 0
 
         this.showIntro = false
@@ -126,7 +122,7 @@ class Battle extends Phaser.Scene {
             alpha: {from: 1, to: 0},
             y: {from: 2, to: 50},
             duration: 300,
-            hold: 1000,
+            hold: 1500,
             onComplete: () => {
                 defeatedEnemy = true
                 this.bgm.stop()
@@ -143,14 +139,14 @@ class Battle extends Phaser.Scene {
         this.keys.EKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E)
 
         // add sound effects
-        this.menuBlip = this.sound.add('menu_blip', { volume: this.sfxVolume })
-        this.menuMove = this.sound.add('menu_move', { volume: this.sfxVolume })
-        this.menuSelect = this.sound.add('menu_select', { volume: this.sfxVolume })
-        this.ballHit = this.sound.add('ball_hit', { volume: this.sfxVolume })
-        this.par = this.sound.add('par', { volume: this.sfxVolume })
+        this.menuBlip = this.sound.add('menu_blip', { volume: sfxVolume })
+        this.menuMove = this.sound.add('menu_move', { volume: sfxVolume })
+        this.menuSelect = this.sound.add('menu_select', { volume: sfxVolume })
+        this.ballHit = this.sound.add('ball_hit', { volume: sfxVolume })
+        this.par = this.sound.add('par', { volume: sfxVolume })
 
         // play background music
-        this.bgm = this.sound.add('battle_theme', {volume: this.bgmVolume})
+        this.bgm = this.sound.add('battle_theme', {volume: bgmVolume})
         this.bgm.loop = true
         this.bgm.play()
     }

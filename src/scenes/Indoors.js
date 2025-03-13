@@ -36,14 +36,15 @@ class Indoors extends Phaser.Scene {
         this.dialogueTyping = false
         this.dialogueText = null
         this.nextText = null
-
-        // sound variables
-        this.sfxVolume = .3
-        this.bgmVolume = .15
     }
 
     create() {
         this.physics.world.drawDebug = false
+
+        if (startFade) {
+            this.cameras.main.fadeIn(1000)
+        }
+        startFade = false
         
         // input
         cursors = this.input.keyboard.createCursorKeys()
@@ -75,7 +76,7 @@ class Indoors extends Phaser.Scene {
 
         this.physics.add.collider(this.hero, this.wallGroup)
 
-        // add interactable door
+        // add interactable door and end hole
         this.door = this.physics.add.sprite(width / 2.025, height / 1.11).setOrigin(0, 0);    this.door.body.setSize(110, 60).setAllowGravity(false);
 
         // add dialogue assets
@@ -91,6 +92,30 @@ class Indoors extends Phaser.Scene {
         // add mythril putter screen
         this.mythrilPutter = this.add.sprite(0, 0, 'mythril_putter').setOrigin(0,0).setDepth(5).setVisible(false)
         this.mythrilPutter.anims.play('mythril-putter-get')
+
+        // add tutorial parts
+        this.controls = this.add.sprite(width/2, height*.8, 'battle_menu').setDepth(4).setScale(.75).setAlpha(0)
+        this.controlsText = this.add.bitmapText(width*.5, height*.8, this.DBOX_FONT, '  -Move-\nW,A,S,D or\nArrow Keys', 44).setDepth(4).setOrigin(.5,.5).setAlpha(0)
+        this.doorIndicator = this.add.sprite(410, 460, 'door_indicator').setDepth(2).setAlpha(0)
+
+        this.controlsTween = this.tweens.add({
+            delay: 2500,
+            targets: [this.controls, this.controlsText],
+            alpha: {from: 0, to: 1},
+            duration: 500,
+            ease: 'Quad.easeOut'
+        })
+        this.doorIndicatorTween = this.tweens.add({
+            paused: true,
+            delay: 3500,
+            targets: this.doorIndicator,
+            y: {from: 480, to: 450},
+            alpha: {from: .5, to: .5},
+            yoyo: true,
+            duration: 750,
+            repeat: -1,
+            ease: 'Quad.easeInOut'
+        })
 
         // set up camera
         this.physics.world.setBounds(0, 0, this.map.width, this.map.height)
@@ -110,12 +135,12 @@ class Indoors extends Phaser.Scene {
         }, this)*/
 
         // add sound effects
-        this.dialogueBlip = this.sound.add('dialogue_blip', { volume: this.sfxVolume })
-        this.itemGet = this.sound.add('item_get', { volume: this.sfxVolume })
-        this.doorClose = this.sound.add('door_close', { volume: this.sfxVolume })
+        this.dialogueBlip = this.sound.add('dialogue_blip', { volume: sfxVolume })
+        this.itemGet = this.sound.add('item_get', { volume: sfxVolume })
+        this.doorClose = this.sound.add('door_close', { volume: sfxVolume })
 
         // play background music
-        this.bgm = this.sound.add('indoor_theme', {volume: this.bgmVolume})
+        this.bgm = this.sound.add('indoor_theme', {volume: bgmVolume})
         this.bgm.loop = true
         this.bgm.play()
     }
@@ -171,6 +196,12 @@ class Indoors extends Phaser.Scene {
                 this.typeText() // trigger dialog
             }
         }
+
+        // remove control instructions
+        if (this.keys.WKey.isDown || this.keys.AKey.isDown || this.keys.SKey.isDown || this.keys.DKey.isDown || this.keys.up.isDown || this.keys.left.isDown || this.keys.down.isDown || this.keys.right.isDown) {
+            this.controls.visible = false
+            this.controlsText.visible = false
+        }
     }
 
     // dialogue functionality sourced from Tina Peng
@@ -206,6 +237,7 @@ class Indoors extends Phaser.Scene {
             this.dialogueBox.visible = false
             this.dialogueLastSpeaker.visible = false
             this.dialogueSpeaker.visible = false
+            this.doorIndicatorTween.restart()
 
         } else {
             // if not, set current speaker

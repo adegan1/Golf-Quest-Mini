@@ -9,10 +9,6 @@ class Overworld extends Phaser.Scene {
 
         // scene variables
         this.encounteredEnemy = false
-
-        // sound variables
-        this.sfxVolume = .3
-        this.bgmVolume = .15
     }
 
     create() {
@@ -41,8 +37,9 @@ class Overworld extends Phaser.Scene {
 
         this.physics.add.collider(this.hero, this.wallGroup)
 
-        // add interactable door
+        // add interactable door and hole
         this.door = this.physics.add.sprite(width * 1.345, height / 3.5).setOrigin(0, 0);    this.door.body.setSize(110, 60).setAllowGravity(false);
+        this.hole = this.physics.add.sprite(width * .47, height * 1.665).setOrigin(0, 0);    this.hole.body.setSize(50, 50).setAllowGravity(false);
 
         // add enemy encounter objects and tweens
         this.alertBox = this.add.sprite(width * 1.49, height * 1.8, 'alertBox').setVisible(false).setScale(.85).setDepth(5)
@@ -148,18 +145,18 @@ class Overworld extends Phaser.Scene {
         this.keys.EKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E)
 
         // debug key listener (assigned to K key)
-        this.input.keyboard.on('keydown-K', function() {
+        /*this.input.keyboard.on('keydown-K', function() {
             this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
             this.physics.world.debugGraphic.clear()
-        }, this)
+        }, this)*/
 
         // add sound effects
-        this.doorClose = this.sound.add('door_close', { volume: this.sfxVolume })
-        this.enemyAlert = this.sound.add('enemy_alert', { volume: this.sfxVolume / 2 })
-        this.enterBattle = this.sound.add('enter_battle', { volume: this.sfxVolume })
+        this.doorClose = this.sound.add('door_close', { volume: sfxVolume })
+        this.enemyAlert = this.sound.add('enemy_alert', { volume: sfxVolume / 2 })
+        this.enterBattle = this.sound.add('enter_battle', { volume: sfxVolume })
 
         // play background music
-        this.bgm = this.sound.add('outdoor_theme', {volume: this.bgmVolume})
+        this.bgm = this.sound.add('outdoor_theme', {volume: bgmVolume})
         this.bgm.loop = true
         this.bgm.play()
     }
@@ -186,6 +183,17 @@ class Overworld extends Phaser.Scene {
                 this.doorClose.play()
                 this.bgm.stop()
                 this.scene.start('indoorsScene')
+            }
+        }
+
+        // if player is near end hole
+        if (Phaser.Math.Distance.BetweenPoints(this.hero, this.hole) < 65) {
+            this.interact_icon.setVisible(true)
+
+            if (Phaser.Input.Keyboard.JustDown(this.keys.EKey))
+            {
+                this.bgm.stop()
+                this.scene.start('gameoverScene')
             }
         }
     }
