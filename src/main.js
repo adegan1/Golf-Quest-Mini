@@ -2,6 +2,21 @@
 // Name: Andrew Degan
 // Adapted Game: Golf Quest Mini (from Steven Universe)
 
+// Phaser Major Components:
+// Physics Systems
+// Cameras
+// Text Objects
+// Animation Manager
+// Tween Manager
+// Timers, etc.
+
+// Missable Features:
+// Game controls show up if player does not move at beginning of game
+
+// Asset Citation:
+// Golf Quest Mini concept art by the Steven Universe Team:
+// https://stevencrewniverse.tumblr.com/post/90482139787/a-selection-of-character-prop-and-effect-designs
+
 'use strict'
 
 const config = {

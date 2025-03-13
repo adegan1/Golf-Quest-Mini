@@ -23,9 +23,6 @@ class Load extends Phaser.Scene {
         // load JSON (dialogue text)
         this.load.json('dialogue', 'json/dialogue.json')
 
-        // load bitmap font
-        this.load.bitmapFont('monkey_font', 'fonts/monkey.png', 'fonts/monkey.xml')
-
         // load dialogue assets
         this.load.image('dialogue_box', 'sprites/dialogue_box.png')
         this.load.image('sandtraps_portrait', 'sprites/sandtraps_portrait.png')

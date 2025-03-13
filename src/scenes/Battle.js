@@ -14,7 +14,7 @@ class Battle extends Phaser.Scene {
         this.TEXT_SIZE = 44
 
         // menu variables
-        this.menuCooldown = 60
+        this.menuCooldown = 30
         this.menuTimer = 0
 
         this.showIntro = false

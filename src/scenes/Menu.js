@@ -3,8 +3,17 @@ class Menu extends Phaser.Scene {
         super("menuScene")
     }
 
+    init() {
+        // text variables
+        this.FONT = 'monkey_font'
+        this.TEXT_SIZE = 28
+    }
+
     preload() {
         this.load.path = './assets/'
+
+        // load bitmap font
+        this.load.bitmapFont('monkey_font', 'fonts/monkey.png', 'fonts/monkey.xml')
 
         // load images
         this.load.image('title_bg', 'backgrounds/title_image.png')
@@ -29,6 +38,9 @@ class Menu extends Phaser.Scene {
             hold: 150,
             repeat: -1,
         })
+
+        // add class information
+        this.classInfo = this.add.bitmapText(10, height, this.FONT, 'UCSC Winter 2025 - CMPM 120', this.TEXT_SIZE).setOrigin(0,1)
 
         // add sound effects
         this.titleBlip = this.sound.add('title_blip', { volume: sfxVolume })
